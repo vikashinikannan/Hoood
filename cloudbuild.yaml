@@ -9,7 +9,7 @@ substitutions:
   _BACKEND_BASE_URL: "your_backend_base_url"
 
 steps:
-  # Step 1: Build the Spring Boot jar (skip tests)
+  # Step 1: Build the Spring Boot JAR (skip tests to speed up build)
   - name: 'gcr.io/cloud-builders/mvn'
     args: ['clean', 'package', '-DskipTests']
 
@@ -22,13 +22,15 @@ steps:
         '--region=us-central1',
         '--platform=managed',
         '--allow-unauthenticated',
+        '--timeout=900s',   # Extend timeout to 15 minutes (useful for slow startups)
         '--set-env-vars=SPRING_DATA_MONGODB_URI=${_SPRING_DATA_MONGODB_URI},JWT_SECRET=${_JWT_SECRET},SPRING_MAIL_USERNAME=${_SPRING_MAIL_USERNAME},SPRING_MAIL_PASSWORD=${_SPRING_MAIL_PASSWORD},GOOGLE_CLIENT_ID=${_GOOGLE_CLIENT_ID},GOOGLE_CLIENT_SECRET=${_GOOGLE_CLIENT_SECRET},GOOGLE_REDIRECT_URI=${_GOOGLE_REDIRECT_URI},BACKEND_BASE_URL=${_BACKEND_BASE_URL}'
       ]
 
-timeout: '1200s'
-
 options:
-  logging: CLOUD_LOGGING_ONLY
+  logging: CLOUD_LOGGING_ONLY  # Store logs in Google Cloud Logging only
+
+timeout: '1500s'  # Total Cloud Build timeout = 25 minutes
+
 
 
 
