@@ -1,0 +1,17 @@
+steps:
+  # Step 1: Build the Spring Boot jar
+  - name: 'gcr.io/cloud-builders/mvn'
+    args: ['clean', 'package']
+
+  # Step 2: Deploy to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: [
+      'run', 'deploy', 'hoood-backend',
+      '--source=.',
+      '--region=us-central1',          # Change to your preferred region
+      '--platform=managed',
+      '--allow-unauthenticated',
+      '--set-env-vars=SPRING_DATA_MONGODB_URI=$SPRING_DATA_MONGODB_URI,JWT_SECRET=$JWT_SECRET,SPRING_MAIL_USERNAME=$SPRING_MAIL_USERNAME,SPRING_MAIL_PASSWORD=$SPRING_MAIL_PASSWORD,GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET,GOOGLE_REDIRECT_URI=$GOOGLE_REDIRECT_URI,BACKEND_BASE_URL=$BACKEND_BASE_URL'
+    ]
+
+timeout: '1200s'   # 20 minutes timeout, adjust if needed
