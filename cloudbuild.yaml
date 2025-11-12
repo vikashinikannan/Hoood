@@ -1,3 +1,13 @@
+substitutions:
+  _SPRING_DATA_MONGODB_URI: "your_mongodb_uri"
+  _JWT_SECRET: "your_jwt_secret"
+  _SPRING_MAIL_USERNAME: "your_mail_username"
+  _SPRING_MAIL_PASSWORD: "your_mail_password"
+  _GOOGLE_CLIENT_ID: "your_google_client_id"
+  _GOOGLE_CLIENT_SECRET: "your_google_client_secret"
+  _GOOGLE_REDIRECT_URI: "your_google_redirect_uri"
+  _BACKEND_BASE_URL: "your_backend_base_url"
+
 steps:
   # Step 1: Build the Spring Boot jar (skip tests)
   - name: 'gcr.io/cloud-builders/mvn'
@@ -9,15 +19,16 @@ steps:
       [
         'run', 'deploy', 'hoood-backend',
         '--source=.',
-        '--region=us-central1',          # Your preferred region
+        '--region=us-central1',
         '--platform=managed',
         '--allow-unauthenticated',
-        '--set-env-vars=SPRING_DATA_MONGODB_URI=$SPRING_DATA_MONGODB_URI,JWT_SECRET=$JWT_SECRET,SPRING_MAIL_USERNAME=$SPRING_MAIL_USERNAME,SPRING_MAIL_PASSWORD=$SPRING_MAIL_PASSWORD,GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET,GOOGLE_REDIRECT_URI=$GOOGLE_REDIRECT_URI,BACKEND_BASE_URL=$BACKEND_BASE_URL'
+        '--set-env-vars=SPRING_DATA_MONGODB_URI=${_SPRING_DATA_MONGODB_URI},JWT_SECRET=${_JWT_SECRET},SPRING_MAIL_USERNAME=${_SPRING_MAIL_USERNAME},SPRING_MAIL_PASSWORD=${_SPRING_MAIL_PASSWORD},GOOGLE_CLIENT_ID=${_GOOGLE_CLIENT_ID},GOOGLE_CLIENT_SECRET=${_GOOGLE_CLIENT_SECRET},GOOGLE_REDIRECT_URI=${_GOOGLE_REDIRECT_URI},BACKEND_BASE_URL=${_BACKEND_BASE_URL}'
       ]
 
-timeout: '1200s'  # 20 minutes timeout
+timeout: '1200s'
 
 options:
   logging: CLOUD_LOGGING_ONLY
+
 
 
